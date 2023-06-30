@@ -8,7 +8,7 @@ from .convertions import *
 class Download():
 
     def __init__(self, path_download: Optional[str]=None) -> None:
-        self.path_download = environ["HOME"] + "/Downloads/YouTubeDownloader/"
+        self.path_download = environ["HOMEPATH"] + "/Downloads/YouTubeDownloader/"
 
 
     def download_video(self, url: str) -> bool:
@@ -29,4 +29,8 @@ class Download():
         else:
             if Extensions.mp3(object):
                 return True
+            
+
+if __name__ == "__main__":
+    pass
         
