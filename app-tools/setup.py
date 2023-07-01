@@ -1,7 +1,9 @@
 import flet as ft
 
-from constants import *
 from components.youtube_download import *
+from components.validations import *
+
+from constants import *
 
 def main(page: ft.Page):
     page.title = TITLE
@@ -10,18 +12,31 @@ def main(page: ft.Page):
     def download(e):
         url = box_text.value
         box_text.error_text = None
-        box_text.focus()
 
-        if "https://www.youtube.com/watch?v=" in url or "https://www.youtube.com/shorts/" in url:
-            pass
+        if Validation().url_youtube(url):
+            button_download.disabled = True
+            button_clear.disabled = True
+
+            control_progress_ring = ft.Row(
+                [ft.ProgressRing()]
+                , alignment = ft.MainAxisAlignment.CENTER
+            )
+
+            page.add(control_progress_ring)
+
+            if Download().download_audio(url):
+                page.controls.remove(control_progress_ring)
 
         else:
-            box_text.error_text = "Please enter a valid URL"
-
+            box_text.error_text = "[ Error ] - URL Not Found!"
+    
         page.update()
-        
+
 
     def clear(e):
+       
+       # Clear Box Text - Add Focus in the Box.
+
        box_text.value = ""
        box_text.focus()
 
