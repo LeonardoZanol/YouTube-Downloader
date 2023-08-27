@@ -1,57 +1,138 @@
+from pytube import YouTube
 import flet as ft
+import os
 
-from components.youtube_download import *
-from components.validations import *
+import constants as c
 
-from constants import *
+path = os.environ["HOME"] + "/Downloads/YouTubeDownloader"
+
+class Message:
+
+    def generate(self, title, content, actions, openMessage=False):
+        return ft.AlertDialog(
+            open              = openMessage,
+            modal             = True,
+            title             = ft.Text(title, text_align=ft.TextAlign.CENTER),
+            content           = ft.Text(content, text_align=ft.TextAlign.CENTER),
+            actions           = actions,
+            actions_alignment = ft.MainAxisAlignment.CENTER
+        )
+
+
+def downlaod(url, type):
+    try:
+        objectYouTubeDownlaod = YouTube(url).streams
+        if type == c.RADIO_VALUE_VIDEO:
+            objectYouTubeDownlaod.get_highest_resolution().download(output_path=path)
+        else:
+            objectYouTubeDownlaod.get_audio_only().download(output_path=path)
+    except:
+        return False
+    else:
+        return True
+
+
+def validateUrl(url):
+    if c.VALIDATION_YOUTUBE_VIDEO_URL in url or c.VALIDATION_YOUTUBE_SHORTS_URL in url:
+        return True
+    
+    return False
+        
 
 def main(page: ft.Page):
-    page.title = TITLE
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    page.title = c.TITLE
 
-    def download(e):
-        url = box_text.value
-        box_text.error_text = None
+    def submeteDownload(e):
+        inputBoxUrl.error_text = ""
+        inputBoxUrl.focus()
 
-        if Validation().url_youtube(url):
-            button_download.disabled = True
-            button_clear.disabled = True
+        if not radioGroupTypeObject.value or not inputBoxUrl.value:
+            inputBoxUrl.error_text = c.DATA_INVALID_INFORMATION
 
-            control_progress_ring = ft.Row(
-                [ft.ProgressRing()]
-                , alignment = ft.MainAxisAlignment.CENTER
-            )
-
-            page.add(control_progress_ring)
-
-            if Download().download_audio(url):
-                page.controls.remove(control_progress_ring)
+        elif not validateUrl(inputBoxUrl.value):
+            messageErrorUrlInvalid.open = True
+            page.dialog = messageErrorUrlInvalid
 
         else:
-            box_text.error_text = "[ Error ] - URL Not Found!"
-    
+            if not downlaod(inputBoxUrl.value, radioGroupTypeObject.value):
+                messageErrorDownloadNotConfirmed.open = True
+                page.dialog = messageErrorDownloadNotConfirmed
+
+            else:
+                messageDownloadConfirmed.open = True
+                page.dialog = messageDownloadConfirmed
+            
         page.update()
 
 
-    def clear(e):
-       
-       # Clear Box Text - Add Focus in the Box.
-
-       box_text.value = ""
-       box_text.focus()
-
-       page.update()
+    def destroy_aplication(e):
+        page.window_destroy()
 
 
-    box_text = ft.TextField(hint_text= "Enter The Desired URL Here", value="", width=400, text_align=ft.TextAlign.LEFT, autofocus=True)
+    def exitAplication(e):
+        messageCloseAplication.open = True
+        page.dialog = messageCloseAplication
 
-    button_download = ft.IconButton(ft.icons.DOWNLOAD, on_click=download)
-    button_clear = ft.IconButton(ft.icons.CLEAR, on_click=clear)
+        page.update()
+
+
+    def closeMessage(e):
+        page.dialog.open = False
+        page.update()
+
+
+    def validateKeyboardEvent(e: ft.KeyboardEvent):
+        if e.key == c.ENTER_KEY:
+            submeteDownload(e)
+
+
+    actions = [
+        ft.IconButton(ft.icons.CLOSE, on_click=closeMessage)
+    ]
+
+    actionsCloseAplication = [
+        ft.ElevatedButton(c.MESSAGE_BUTTON_CONFIRM, on_click=destroy_aplication),
+        ft.ElevatedButton(c.MESSAGE_BUTTON_NO_CONFIRM, on_click=closeMessage)
+    ]
+
+    messageTitle = ft.Text(c.TITLE, text_align=ft.TextAlign.CENTER, size=50)
+    inputBoxUrl  = ft.TextField(hint_text=c.HINT_TEXT_INPUT_BOX, width=430, text_align=ft.TextAlign.CENTER)
+    
+    radioGroupTypeObject = ft.RadioGroup(content=ft.Row([
+        ft.Radio(value=c.RADIO_VALUE_VIDEO, label=c.RADIO_LABEL_VIDEO),
+        ft.Radio(value=c.RADIO_VALUE_AUDIO, label=c.RADIO_LABEL_AUDIO)
+    ]))
+
+    buttonSubmitDownload = ft.ElevatedButton(c.BUTTON_DOWNLOAD, on_click=submeteDownload)
+    buttonExit           = ft.ElevatedButton(c.BUTTON_EXIT, width=120, on_click=exitAplication)
+
+    messageCloseAplication           = Message().generate(c.MESSAGE_ALERT_EXIT_TITLE, c.MESSAGE_ALERT_EXIT_CONTENT, actionsCloseAplication, True)
+    messageErrorUrlInvalid           = Message().generate(c.MESSAGE_TITLE_ALERT_INVALID_URL, c.MESSAGE_CONTENT_ALERT_INVALID_URL, actions)
+    messageErrorDownloadNotConfirmed = Message().generate(c.MESSAGE_TITLE_ALERT_DOWNLOAD_NOT_CONFIRMED, c.MESSAGE_CONTENT_ALERT_DOWNLOAD_NOT_CONFIRMED, actions)
+    messageDownloadConfirmed         = Message().generate(c.MESSAGE_TITLE_ALERT_DOWNLOAD_CONFIRMED, c.MESSAGE_CONTENT_ALERT_DOWNLOAD_CONFIRMED, actions)
+
+    page.on_keyboard_event = validateKeyboardEvent
 
     page.add(
         ft.Row(
-            [button_clear, box_text, button_download],
-            alignment = ft.MainAxisAlignment.CENTER
+            [messageTitle], 
+            alignment=ft.MainAxisAlignment.CENTER
+        ),
+
+        ft.Row(
+            [inputBoxUrl], 
+            alignment=ft.MainAxisAlignment.CENTER
+        ),
+
+        ft.Row(
+            [radioGroupTypeObject], 
+            alignment=ft.MainAxisAlignment.CENTER
+        ),
+
+        ft.Row(
+            [buttonSubmitDownload, buttonExit], 
+            alignment=ft.MainAxisAlignment.CENTER
         )
     )
 
