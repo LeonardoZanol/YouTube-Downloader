@@ -2,12 +2,13 @@ import os
 
 class Convertions:
 
-    def toMp3(self, file):
+    def toMp3(self, file) -> str:
         try:
-            base, ext = os.path.splitext(file)
-        
+            base, extension = os.path.splitext(file)
         except:
-            return False
-        
-        os.rename(file, f"{base}.mp3")
+            return None
 
+        return f"{base}.mp3"
+
+if __name__ == "__main__":
+    pass

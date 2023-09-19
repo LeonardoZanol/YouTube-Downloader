@@ -1,7 +1,6 @@
 from pytube import YouTube
 
 import flet as ft
-import os
 
 from . components.validations import *
 from . components.convertion  import *
@@ -62,6 +61,8 @@ def main(page: ft.Page):
             page.dialog = messageErrorUrlInvalid
 
         else:
+            
+
             messageStatusDownlaod.open = True
             page.dialog = messageStatusDownlaod
 
