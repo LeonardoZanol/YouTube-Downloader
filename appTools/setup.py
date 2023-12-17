@@ -49,7 +49,7 @@ def main(page: ft.Page):
         page.update()
 
 
-    def submeteDownload(e):
+    def submitDownload(e):
         inputBoxUrl.error_text = None
         inputBoxUrl.focus()
 
@@ -98,7 +98,7 @@ def main(page: ft.Page):
 
     def validateKeyboardEvent(e: ft.KeyboardEvent):
         if e.key == ENTER_KEY:
-            submeteDownload(e)
+            submitDownload(e)
 
 
     actions = [
@@ -118,7 +118,7 @@ def main(page: ft.Page):
         ft.Radio(value=RADIO_VALUE_AUDIO, label=RADIO_LABEL_AUDIO)
     ]))
 
-    buttonSubmitDownload = ft.ElevatedButton(BUTTON_DOWNLOAD, on_click=submeteDownload)
+    buttonSubmitDownload = ft.ElevatedButton(BUTTON_DOWNLOAD, on_click=submitDownload)
     buttonExit           = ft.ElevatedButton(BUTTON_EXIT, width=120, on_click=exitAplication)
 
     messageCloseAplication           = Message().generate(MESSAGE_ALERT_EXIT_TITLE, MESSAGE_ALERT_EXIT_CONTENT, actionsCloseAplication, True)
