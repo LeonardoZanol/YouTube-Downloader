@@ -1,0 +1,4 @@
+pytube==15.0.0
+flet==0.14.0
+flet-core==0.14.0
+flet-runtime==0.14.0
