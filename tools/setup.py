@@ -38,7 +38,7 @@ def downlaod(url, type):
 def main(page: ft.Page):    
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.window_center()
-    page.title = TITLE
+    page.title = f"{TITLE} - {VERSION}"
 
     def constructMessageStatusDownload(title="", content="", actions=[]):
         messageStatusDownlaod.title             = ft.Text(title, text_align=ft.TextAlign.CENTER)

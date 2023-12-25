@@ -1,5 +1,7 @@
 from .constants import *
-import os
+
+from platform import system
+from os import path
 
 class Validation:
 
@@ -11,15 +13,14 @@ class Validation:
     
 
     def getSystemPathDownload(self):
-        environ = os.environ
-        
-        if WINDOWS in environ[OS].upper():
-            return  environ[WINDOWS_ENVIRON] + WINDOWS_DOWNLOAD_PATH
-        
-        return environ[OTHER_SO_ENVIRON] + OTHER_SO_DOWNLOAD_PATH
+        home_path = path.expanduser("~")
 
+        if system() == WINDOWS:
+            return home_path + WINDOWS_DOWNLOAD_PATH
+        
+        return home_path + OTHER_SO_DOWNLOAD_PATH
+        
     
 if __name__ == "__main__":
     pass
-
     

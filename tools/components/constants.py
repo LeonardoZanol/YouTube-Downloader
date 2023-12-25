@@ -1,16 +1,12 @@
-TITLE = "YouTube Downloader"
+TITLE   = "YouTube Downloader"
+VERSION = "1.0b"
 
 ## CONSTANTES ##
 
 WINDOWS                = "WINDOWS"
-WINDOWS_ENVIRON        = "HOMEPATH"
 WINDOWS_DOWNLOAD_PATH  = "\Downloads\YouTubeDownloader"
 
-OTHER_SO_ENVIRON       = "HOME"
 OTHER_SO_DOWNLOAD_PATH = "/Downloads/YouTubeDownloader"
-
-OS                     = "OS"
-
 
 # Button
 
