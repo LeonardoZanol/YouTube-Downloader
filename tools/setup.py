@@ -1,12 +1,8 @@
-from pytube import YouTube
-
 import flet as ft
 
 from . components.validations import *
 from . components.convertion  import *
 from . components.constants   import *
-
-path = Validation().getSystemPathDownload()
 
 class Message:
 
@@ -19,20 +15,6 @@ class Message:
             actions           = actions,
             actions_alignment = ft.MainAxisAlignment.CENTER
         )
-
-
-def downlaod(url, type):
-    try:
-        objectYouTubeDownlaod = YouTube(Validation().urlYouTube(url)).streams
-        if type == RADIO_VALUE_VIDEO:
-            objectYouTubeDownlaod.get_highest_resolution().download(output_path=path)
-        else:
-            objectYouTubeDownlaod.get_audio_only().download(output_path=path)
-
-    except:
-        return False
-   
-    return True
         
 
 def main(page: ft.Page):    
@@ -66,7 +48,7 @@ def main(page: ft.Page):
 
             constructMessageStatusDownload(MESSAGE_TITLE_DQWNLOAD_PROCESSING, MESSAGE_CONTENT_DOWNLOAD_PROCESSING, actions=[ft.ProgressRing()])
 
-            if not downlaod(inputBoxUrl.value, radioGroupTypeObject.value):
+            if not Validation().downloadYoutube(inputBoxUrl.value, radioGroupTypeObject.value):
                 constructMessageStatusDownload(MESSAGE_TITLE_ALERT_DOWNLOAD_NOT_CONFIRMED, MESSAGE_CONTENT_ALERT_DOWNLOAD_NOT_CONFIRMED, actions)
 
             else:
