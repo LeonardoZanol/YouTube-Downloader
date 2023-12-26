@@ -5,7 +5,6 @@ from . components.convertion  import *
 from . components.constants   import *
 
 class Message:
-
     def generate(self, title="", content="", actions=[], openMessage=False):
         return ft.AlertDialog(
             open              = openMessage,
@@ -37,11 +36,9 @@ def main(page: ft.Page):
 
         if not radioGroupTypeObject.value or not inputBoxUrl.value:
             inputBoxUrl.error_text = DATA_INVALID_INFORMATION
-
         elif not Validation().urlYouTube(inputBoxUrl.value):
             messageErrorUrlInvalid.open = True
             page.dialog = messageErrorUrlInvalid
-
         else:
             messageStatusDownlaod.open = True
             page.dialog = messageStatusDownlaod
@@ -50,10 +47,8 @@ def main(page: ft.Page):
 
             if not Validation().downloadYoutube(inputBoxUrl.value, radioGroupTypeObject.value):
                 constructMessageStatusDownload(MESSAGE_TITLE_ALERT_DOWNLOAD_NOT_CONFIRMED, MESSAGE_CONTENT_ALERT_DOWNLOAD_NOT_CONFIRMED, actions)
-
             else:
                 constructMessageStatusDownload(MESSAGE_TITLE_ALERT_DOWNLOAD_CONFIRMED, MESSAGE_CONTENT_ALERT_DOWNLOAD_CONFIRMED, actions)
-                
                 inputBoxUrl.value          = None
                 radioGroupTypeObject.value = None
 
@@ -91,7 +86,7 @@ def main(page: ft.Page):
     ]
 
     messageTitle = ft.Text(TITLE, text_align=ft.TextAlign.CENTER, size=50)
-    inputBoxUrl  = ft.TextField(hint_text=HINT_TEXT_INPUT_BOX, width=500, text_align=ft.TextAlign.CENTER)
+    inputBoxUrl = ft.TextField(hint_text=HINT_TEXT_INPUT_BOX, width=500, text_align=ft.TextAlign.CENTER)
     
     radioGroupTypeObject = ft.RadioGroup(content=ft.Row([
         ft.Radio(value=RADIO_VALUE_VIDEO, label=RADIO_LABEL_VIDEO),
@@ -99,12 +94,12 @@ def main(page: ft.Page):
     ]))
 
     buttonSubmitDownload = ft.ElevatedButton(BUTTON_DOWNLOAD, on_click=submitDownload)
-    buttonExit           = ft.ElevatedButton(BUTTON_EXIT, width=120, on_click=exitAplication)
+    buttonExit = ft.ElevatedButton(BUTTON_EXIT, width=120, on_click=exitAplication)
 
-    messageCloseAplication           = Message().generate(MESSAGE_ALERT_EXIT_TITLE, MESSAGE_ALERT_EXIT_CONTENT, actionsCloseAplication, True)
-    messageErrorUrlInvalid           = Message().generate(MESSAGE_TITLE_ALERT_INVALID_URL, MESSAGE_CONTENT_ALERT_INVALID_URL, actions)
+    messageCloseAplication = Message().generate(MESSAGE_ALERT_EXIT_TITLE, MESSAGE_ALERT_EXIT_CONTENT, actionsCloseAplication, True)
+    messageErrorUrlInvalid = Message().generate(MESSAGE_TITLE_ALERT_INVALID_URL, MESSAGE_CONTENT_ALERT_INVALID_URL, actions)
 
-    messageStatusDownlaod            = ft.AlertDialog(
+    messageStatusDownlaod = ft.AlertDialog(
         modal = True
     )
 
