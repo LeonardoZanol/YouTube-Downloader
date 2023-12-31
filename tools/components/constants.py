@@ -4,9 +4,9 @@ VERSION = "1.0b"
 ## CONSTANTES ##
 
 WINDOWS                = "WINDOWS"
-WINDOWS_DOWNLOAD_PATH  = "\Downloads\YouTubeDownloader"
+WINDOWS_DOWNLOAD_PATH  = "\\Downloads\\YouTubeDownloader\\"
 
-OTHER_SO_DOWNLOAD_PATH = "/Downloads/YouTubeDownloader"
+OTHER_SO_DOWNLOAD_PATH = "/Downloads/YouTubeDownloader/"
 
 # Button
 

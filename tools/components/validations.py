@@ -1,3 +1,4 @@
+from .convertions import *
 from .constants import *
 
 from platform import system
@@ -27,9 +28,10 @@ class Validation:
             if type == RADIO_VALUE_VIDEO:
                 objectYouTubeDownlaod.get_highest_resolution().download(output_path=path)
             else:
-                objectYouTubeDownlaod.get_audio_only().download(output_path=path)    
+                file = objectYouTubeDownlaod.get_audio_only()
+                file.download(output_path=path)
+                Convertion(path + file.default_filename).toMp3()  
         except:
             return False
-        else:
-            return True
+        return True
  
