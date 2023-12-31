@@ -18,7 +18,16 @@ class Message:
 def main(page: ft.Page):    
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.window_center()
-    page.title = f"{TITLE} + {VERSION}"
+    page.title = f"{TITLE} - {VERSION}"
+
+    def constructMessageDownloadStatus(title="", content="", actions=[]):
+        messageStatusDownload.title             = ft.Text(title, text_align=ft.TextAlign.CENTER)
+        messageStatusDownload.content           = ft.Text(content, text_align=ft.TextAlign.CENTER)
+        messageStatusDownload.actions           = actions
+        messageStatusDownload.actions_alignment = ft.MainAxisAlignment.CENTER
+
+        page.update()
+
 
     def submeteDownload(e):
         inputBoxUrl.error_text = None
@@ -32,22 +41,18 @@ def main(page: ft.Page):
             page.dialog = messageErrorUrlInvalid
 
         else:
-            messageDownloadProcessing.open = True
-            page.dialog = messageDownloadProcessing
-            page.update()
+            messageStatusDownload.open = True
+            page.dialog = messageStatusDownload
 
-            if not Validation().downloadYoutube(inputBoxUrl.value, radioGroupTypeObject.value):
-                messageDownloadNotConfirm.open = True
-                page.dialog = messageDownloadNotConfirm
-                page.update()
+            constructMessageDownloadStatus(MESSAGE_TITLE_DQWNLOAD_PROCESSING, MESSAGE_CONTENT_DOWNLOAD_PROCESSING, [ft.ProgressRing()])
+
+            if Validation().downloadYoutube(inputBoxUrl.value, radioGroupTypeObject.value):
+                constructMessageDownloadStatus(MESSAGE_TITLE_ALERT_DOWNLOAD_CONFIRMED, MESSAGE_CONTENT_ALERT_DOWNLOAD_CONFIRMED, actions)
+                radioGroupTypeObject.value = ""
+                inputBoxUrl.value = ""
 
             else:
-                messageDownloadConfirm.open = True
-                page.dialog = messageDownloadConfirm
-
-                radioGroupTypeObject.value = None
-                inputBoxUrl.value = None
-                page.update()
+                constructMessageDownloadStatus(MESSAGE_TITLE_ALERT_DOWNLOAD_NOT_CONFIRMED, MESSAGE_CONTENT_ALERT_DOWNLOAD_NOT_CONFIRMED, actions)
 
         page.update()
 
@@ -86,14 +91,13 @@ def main(page: ft.Page):
     ]))
 
     buttonSubmitDownload = ft.ElevatedButton(BUTTON_DOWNLOAD, on_click=submeteDownload)
+    
     buttonExit           = ft.ElevatedButton(BUTTON_EXIT, width=120, on_click=exitAplication)
-
     messageCloseAplication = Message().generate(MESSAGE_ALERT_EXIT_TITLE, MESSAGE_ALERT_EXIT_CONTENT, actionsCloseAplication, True)
+
     messageErrorUrlInvalid = Message().generate(MESSAGE_TITLE_ALERT_INVALID_URL, MESSAGE_CONTENT_ALERT_INVALID_URL, actions)
 
-    messageDownloadNotConfirm = Message().generate(MESSAGE_TITLE_ALERT_DOWNLOAD_NOT_CONFIRMED, MESSAGE_CONTENT_ALERT_DOWNLOAD_NOT_CONFIRMED, actions)
-    messageDownloadProcessing = Message().generate(MESSAGE_TITLE_DQWNLOAD_PROCESSING, MESSAGE_CONTENT_DOWNLOAD_PROCESSING, [ft.ProgressRing()])
-    messageDownloadConfirm = Message().generate(MESSAGE_TITLE_ALERT_DOWNLOAD_CONFIRMED, MESSAGE_CONTENT_ALERT_DOWNLOAD_CONFIRMED, actions)
+    messageStatusDownload = ft.AlertDialog(modal=True)
 
     page.add(
         ft.Row(

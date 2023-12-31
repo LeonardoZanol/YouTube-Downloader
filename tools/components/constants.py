@@ -22,10 +22,6 @@ RADIO_VALUE_AUDIO = "audio"
 RADIO_LABEL_VIDEO = "Vídeo"
 RADIO_LABEL_AUDIO = "Áudio"
 
-# Key Keyboard:
-
-ENTER_KEY = "Enter"
-
 # Validation URL:
 
 VALIDATION_YOUTUBE_VIDEO_URL  = "https://www.youtube.com/watch?v="
